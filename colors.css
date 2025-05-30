@@ -1,0 +1,42 @@
+:root {
+  /* Primary Colors */
+  --primary: #FF6B00; /* vibrant orange */
+  --accent: #60C1A3; /* mint */
+  --neutral-light: #F5F5F5; /* off-white */
+  --neutral-dark: #003366; /* deep navy */
+  
+  /* Shades of Primary */
+  --primary-light: #FF8A33;
+  --primary-dark: #CC5500;
+  
+  /* Shades of Accent */
+  --accent-light: #7FDCBD;
+  --accent-dark: #4A9A82;
+  
+  /* Neutral Shades */
+  --neutral-gray: #CCCCCC;
+  --neutral-gray-dark: #666666;
+  
+  /* Functional Colors */
+  --success: #28A745;
+  --warning: #FFC107;
+  --danger: #DC3545;
+  --info: #17A2B8;
+  
+  /* Background Colors */
+  --bg-primary: var(--neutral-light);
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #EAEAEA;
+  
+  /* Text Colors */
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --text-light: #FFFFFF;
+  
+  /* Shadow */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 16px 32px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Konnect - Your Home Away From Home</title>
+  <meta name="description" content="Konnect: A one-stop companion for foreigners in Korea—travelers, students, workers, and entrepreneurs.">
+  <meta name="theme-color" content="#FF6B00">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../design/colors.css">
+  <link rel="stylesheet" href="../design/typography.css">
+  <link rel="stylesheet" href="../design/components.css">
+  
+  <!-- Preload critical scripts -->
+  <link rel="preload" href="main.js" as="script">
+  <link rel="preload" href="navigation.js" as="script">
+  <link rel="preload" href="github-pages-compatibility.js" as="script">
+  
+  <style>
+    /* Critical CSS for initial loading */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #333;
+    }
+    
+    #app {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #FF6B00;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    
+    .loading-logo {
+      font-size: 36px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 60px);
+      overflow-y: auto;
+      background-color: #F5F5F5;
+      padding: 16px;
+      box-sizing: border-box;
+      display: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+    
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: #888;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .tab.active {
+      color: #FF6B00;
+    }
+    
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    
+    .tab-label {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      width: 90%;
+      max-width: 500px;
+      max-height: 90%;
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .modal-header {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+    
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #888;
+    }
+    
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    
+    .sos-button {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #FF3B30;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+      z-index: 99;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(255, 59, 48, 0.5);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+      <div class="loading-logo">KONNECT</div>
+      <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Opening Animation Container -->
+    <div id="opening-animation-container"></div>
+    
+    <!-- Onboarding Container -->
+    <div id="onboarding-container"></div>
+    
+    <!-- Main App Screens -->
+    <div id="home-screen" class="screen"></div>
+    <div id="services-screen" class="screen"></div>
+    <div id="discover-screen" class="screen"></div>
+    <div id="community-screen" class="screen"></div>
+    <div id="profile-screen" class="screen"></div>
+    
+    <!-- Tab Bar -->
+    <div class="tab-bar" id="tab-bar">
+      <div class="tab" data-screen="home">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-label">Home</div>
+      </div>
+      <div class="tab" data-screen="services">
+        <div class="tab-icon">🛎️</div>
+        <div class="tab-label">Services</div>
+      </div>
+      <div class="tab" data-screen="discover">
+        <div class="tab-icon">🔍</div>
+        <div class="tab-label">Discover</div>
+      </div>
+      <div class="tab" data-screen="community">
+        <div class="tab-icon">👥</div>
+        <div class="tab-label">Community</div>
+      </div>
+      <div class="tab" data-screen="profile">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">Profile</div>
+      </div>
+    </div>
+    
+    <!-- SOS Button -->
+    <div class="sos-button" id="sos-button">SOS</div>
+  </div>
+  
+  <!-- GitHub Pages Compatibility Script -->
+  <script src="github-pages-compatibility.js"></script>
+  
+  <!-- Core Scripts -->
+  <script src="validation.js"></script>
+  <script src="simulated-apis.js"></script>
+  <script src="extra-features.js"></script>
+  
+  <!-- UI Scripts -->
+  <script src="opening-animation.js"></script>
+  <script src="onboarding.js"></script>
+  <script src="navigation.js"></script>
+  
+  <!-- Screen Scripts -->
+  <script src="home-screen.js"></script>
+  <script src="services-screen.js"></script>
+  <script src="discover-screen.js"></script>
+  <script src="community-screen.js"></script>
+  <script src="profile-screen.js"></script>
+  
+  <!-- Main App Script -->
+  <script src="main.js"></script>
+</body>
+</html>
